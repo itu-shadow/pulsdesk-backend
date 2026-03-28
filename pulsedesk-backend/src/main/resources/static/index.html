@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PulseDesk</title>
+</head>
+<body>
+
+<h2>Submit Comment</h2>
+
+<input id="text" placeholder="Enter comment" size="50"/>
+<button onclick="submit()">Send</button>
+
+<h3>Tickets</h3>
+<ul id="tickets"></ul>
+
+<script>
+    async function submit() {
+        const text = document.getElementById("text").value;
+
+        await fetch("http://localhost:8080/api/comments", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: text, channel: "web" })
+        });
+
+        loadTickets();
+    }
+
+    async function loadTickets() {
+        const res = await fetch("http://localhost:8080/api/tickets");
+        const data = await res.json();
+
+        const list = document.getElementById("tickets");
+        list.innerHTML = "";
+
+        data.forEach(t => {
+            const li = document.createElement("li");
+            li.innerText = t.title + " | " + t.category + " | " + t.priority;
+            list.appendChild(li);
+        });
+    }
+
+    loadTickets();
+</script>
+
+</body>
+</html>
