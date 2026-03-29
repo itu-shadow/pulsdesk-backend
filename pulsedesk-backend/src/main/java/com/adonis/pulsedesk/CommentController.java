@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -15,9 +16,8 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<Comment> submitComment(@RequestBody Comment comment) {
-        Comment savedComment = commentService.submitComment(comment);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedComment);
+    public Map<String, String> submitComment(@RequestBody Comment comment) {
+        return commentService.processComment(comment);
     }
 
     @GetMapping

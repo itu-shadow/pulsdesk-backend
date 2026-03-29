@@ -1,47 +1,387 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PulseDesk</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: url("Adonisu.png") no-repeat center center/cover;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            color: white;
+        }
+        body {
+            transition: background 0.3s ease;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.15);
+            z-index: -2;
+        }
+
+        .particles::before {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(#38bdf8 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.15;
+            animation: moveBg 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveBg {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100px); }
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 30px;
+            transform: translateY(-20px);
+        }
+
+        .robot {
+            font-size: 60px;
+            filter: drop-shadow(0 0 20px #38bdf8);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(90deg, #38bdf8, #a78bfa);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(56,189,248,0.5);
+        }
+
+        .container {
+            width: 420px;
+            margin: auto;
+        }
+
+        .glass {
+            position: relative;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(25px);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+        }
+
+        .glass::before {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(167,139,250,0.25), transparent);
+            filter: blur(60px);
+            z-index: -1;
+        }
+
+        input {
+            width: 95%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            background: #0f172a;
+            color: white;
+        }
+
+        input::placeholder {
+            color: #cbd5f5;
+        }
+
+        input:focus {
+            box-shadow: 0 0 10px #38bdf8;
+        }
+
+        .channels button {
+            margin: 5px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: none;
+            background: #1e293b;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .channels button:hover {
+            background: #38bdf8;
+            transform: scale(1.1);
+        }
+
+        .channels button.active {
+            background: #6366f1;
+        }
+
+        .submit-btn {
+            margin-top: 10px;
+            padding: 12px;
+            width: 100%;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(90deg, #38bdf8, #a78bfa);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: white;
+            color: #0f172a;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px white;
+        }
+
+        .ticket {
+            background: rgba(255,255,255,0.05);
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 15px;
+            transition: 0.3s;
+            color: #e2e8f0;
+        }
+
+        .ticket b {
+            color: white;
+        }
+
+        .ticket:hover {
+            transform: translateY(-5px);
+        }
+
+        .high {
+            color: #ff4d4d;
+            font-weight: bold;
+        }
+
+        .medium {
+            color: #ffa500;
+            font-weight: bold;
+        }
+
+        .low {
+            color: #4dff88;
+            font-weight: bold;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #6366f1;
+            padding: 12px 18px;
+            border-radius: 10px;
+            display: none;
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .counter {
+            font-size: 14px;
+            opacity: 0.9;
+            color: white;
+        }
+
+        canvas {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
+<div class="particles"></div>
 
-<h2>Submit Comment</h2>
+<div class="header">
+    <div class="robot">🤖</div>
+    <h1>PulseDesk</h1>
+</div>
 
-<input id="text" placeholder="Enter comment" size="50"/>
-<button onclick="submit()">Send</button>
+<div class="container">
+    <div class="glass">
+        <input id="text" placeholder="Describe your issue..." />
+        <div class="channels">
+            <button onclick="setChannel('web')" class="active">🌐</button>
+            <button onclick="setChannel('email')">📧</button>
+            <button onclick="setChannel('slack')">💬</button>
+        </div>
+        <button class="submit-btn" id="submitBtn" onclick="submitComment()">Submit</button>    </div>
 
-<h3>Tickets</h3>
-<ul id="tickets"></ul>
+    <div class="glass">
+        <div class="stats">
+            <div class="counter" id="count"></div>
+        </div>
+        <div class="filters" style="text-align:center;">
+            <button onclick="setFilter('all')" class="active">All</button>
+            <button onclick="setFilter('high')">High</button>
+            <button onclick="setFilter('medium')">Medium</button>
+            <button onclick="setFilter('low')">Low</button>
+        </div>
+        <canvas id="chart"></canvas>
+        <button class="submit-btn" onclick="loadTickets()">Load Tickets</button>
+        <div id="tickets"></div>
+    </div>
+</div>
+
+<div class="toast" id="toast">Ticket created 🚀</div>
 
 <script>
-    async function submit() {
+    let currentFilter = "all";
+    const API = "http://localhost:8080/api";
+    let selectedChannel = "web";
+    let chart;
+
+    function setChannel(c) {
+        selectedChannel = c;
+
+        document.querySelectorAll(".channels button")
+            .forEach(b => b.classList.remove("active"));
+
+        event.target.classList.add("active");
+    }
+
+    async function submitComment() {
+        const btn = document.getElementById("submitBtn");
         const text = document.getElementById("text").value;
 
-        await fetch("http://localhost:8080/api/comments", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: text, channel: "web" })
-        });
+        if (!text) return;
+
+        btn.innerText = "Submitting...";
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(API + "/comments", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ text, channel: selectedChannel })
+            });
+
+            const result = await res.json();
+
+            if (String(result.isTicket) === "true") {
+                showToast("Ticket created 🚀");
+                loadTickets();
+            } else {
+                showToast("Nice try 😏 but not a ticket");
+            }
+
+        } catch (err) {
+            alert("Something went wrong!");
+        }
+
+        btn.innerText = "Submit";
+        btn.disabled = false;
+
+    }
+
+    function setFilter(f) {
+        currentFilter = f;
+
+        document.querySelectorAll(".filters button")
+            .forEach(b => b.classList.remove("active"));
+
+        event.target.classList.add("active");
 
         loadTickets();
     }
 
     async function loadTickets() {
-        const res = await fetch("http://localhost:8080/api/tickets");
-        const data = await res.json();
+        try {
+            const res = await fetch(API + "/tickets");
 
-        const list = document.getElementById("tickets");
-        list.innerHTML = "";
+            if (!res.ok) throw new Error("Server error");
 
-        data.forEach(t => {
-            const li = document.createElement("li");
-            li.innerText = t.title + " | " + t.category + " | " + t.priority;
-            list.appendChild(li);
+            const data = await res.json();
+
+            console.log("Fetched tickets:", data);
+
+            let html = "";
+            let high = 0, medium = 0, low = 0;
+
+            data.filter(t => currentFilter === "all" || t.priority === currentFilter).forEach(t => {
+                const time = new Date(t.createdAt).toLocaleString();
+                if (t.priority === "high") high++;
+                if (t.priority === "medium") medium++;
+                if (t.priority === "low") low++;
+                html += `
+<div class="ticket">
+    <b>${t.title}</b><br>
+    ${t.description}<br>
+    ${getCategoryIcon(t.category)} ${t.category}<br>
+    <span class="${t.priority}">${t.priority}</span><br>
+    <small style="opacity:0.7">🕒 ${time}</small>
+</div>`;
+            });
+
+            document.getElementById("tickets").innerHTML = html;
+            document.getElementById("count").innerText =
+                data.length + " tickets • " + high + " high";
+
+            renderChart(high, medium, low);
+
+        } catch (err) {
+            console.error(err);
+            document.getElementById("tickets").innerHTML =
+                "<p style='color:red'>Failed to load tickets</p>";
+        }
+    }
+
+    function renderChart(h, m, l) {
+        const ctx = document.getElementById("chart");
+
+        if (chart) chart.destroy();
+
+        chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['High', 'Medium', 'Low'],
+                datasets: [{
+                    data: [h, m, l],
+                    backgroundColor: ['#ff4d4d', '#ffa500', '#4dff88']
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { labels: { color: 'white' } }
+                }
+            }
         });
     }
 
-    loadTickets();
-</script>
+    function getCategoryIcon(cat) {
+        if (cat === "bug") return "🐛";
+        if (cat === "feature") return "💡";
+        if (cat === "billing") return "💳";
+        return "❓";
+    }
 
+    function showToast(message) {
+        const t = document.getElementById("toast");
+        t.innerText = message;
+        t.style.display = "block";
+        setTimeout(() => t.style.display = "none", 2000);
+    }
+
+    loadTickets();
+    setInterval(loadTickets, 5000);
+</script>
 </body>
 </html>

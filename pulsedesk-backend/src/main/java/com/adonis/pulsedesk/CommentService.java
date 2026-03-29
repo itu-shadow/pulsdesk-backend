@@ -8,7 +8,8 @@ import java.util.Map;
 
 @Service
 public class CommentService {
-
+    @Autowired
+    private HuggingFaceService huggingFaceService;
     @Autowired
     private CommentRepository commentRepository;
 
@@ -49,5 +50,20 @@ public class CommentService {
 
     public void deleteComment(Long id) {
         commentRepository.deleteById(id);
+    }
+    public Map<String, String> processComment(Comment comment) {
+
+        Map<String, String> aiResult = huggingFaceService.analyzeComment(comment.getText());
+        if (Boolean.parseBoolean(aiResult.get("isTicket"))) {
+            Ticket ticket = new Ticket();
+            ticket.setTitle(aiResult.get("summary"));
+            ticket.setDescription(comment.getText());
+            ticket.setCategory(aiResult.get("category"));
+            ticket.setPriority(aiResult.get("priority"));
+
+            ticketRepository.save(ticket);
+        }
+
+        return aiResult; // 🔥 IMPORTANT
     }
 }
