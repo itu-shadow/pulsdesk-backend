@@ -19,7 +19,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html", "/Adonisu.png").permitAll()
                         .anyRequest().authenticated()
                 )
-                .httpBasic();
+                .formLogin();
 
         return http.build();
     }
