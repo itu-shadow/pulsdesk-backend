@@ -166,7 +166,6 @@ com.adonis.pulsedesk
 
 * AI responses may vary depending on model output
 * Designed for demonstration and learning purposes
-* Uses in-memory authentication for simplicity
 
 ---
 
@@ -189,9 +188,9 @@ Yash Kumar
 
 ## ⭐ Bonus Achievements
 
-Custom UI
-AI-powered logic
-Dockerized deployment
-Public hosting
+* Custom UI
+* AI-powered logic
+* Dockerized deployment
+* Public hosting
 
 ---
