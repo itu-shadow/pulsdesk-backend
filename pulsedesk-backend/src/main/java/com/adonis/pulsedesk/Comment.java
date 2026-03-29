@@ -1,18 +1,24 @@
 package com.adonis.pulsedesk;
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Comment {
+    public String getText() {
+        return text;
+    }
+    public String getChannel() {
+        return channel;
+    }
 
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,5 +35,6 @@ public class Comment {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+
     }
 }
