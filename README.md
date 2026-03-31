@@ -28,9 +28,8 @@ The application also includes a simple frontend UI and is deployed publicly.
 * H2 / JPA database storage
 * Interactive frontend dashboard
 * Ticket filtering (High / Medium / Low)
-* Chart visualization (Chart.js)
+* Chart visualization 
 * Deployed using Docker + Render
-* Basic authentication for restricted access
 
 
 # Tech Stack
@@ -40,8 +39,6 @@ The application also includes a simple frontend UI and is deployed publicly.
 * **AI Integration:** Hugging Face Inference API
 * **Frontend:** HTML, CSS, JavaScript, Chart.js
 * **Deployment:** Docker + Render
-* **Security:** Spring Security (Basic Auth / Form Login)
-
 
 
 # API Endpoints
@@ -156,7 +153,6 @@ com.adonis.pulsedesk
 ├── service
 ├── repository
 ├── entity
-├── config
 └── resources
     └── static (frontend)
 ```
@@ -180,13 +176,13 @@ This project demonstrates:
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 Yash Kumar
 
 ---
 
-## ⭐ Bonus Achievements
+## Bonus Achievements
 
 * Custom UI
 * AI-powered logic
