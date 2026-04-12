@@ -30,8 +30,7 @@ The application also includes a simple frontend UI and is deployed publicly.
 * Ticket filtering (High / Medium / Low)
 * Chart visualization 
 * Deployed using Docker + Render
-*Live Demo 
--https://pulsdesk-backend-3.onrender.com/
+
 
 
 # Tech Stack
@@ -86,7 +85,7 @@ Output:
 
 # 🌐 Live Demo (Deployed)
 
-👉 https://pulsdesk-backend-3.onrender.com
+👉 https://pulsdesk-backend-3.onrender.com/
 
 
 ## ⚙️ Setup Instructions
